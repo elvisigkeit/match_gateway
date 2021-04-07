@@ -10,13 +10,11 @@ WORKDIR /build
 COPY . .
 
 RUN go get -d -v ./...
-RUN go install -v ./...
-
-RUN ls
+RUN go build -o /go/bin ./...
 
 FROM scratch
 
-COPY --from=builder /dist/match_gateway /
+COPY --from=builder /go/bin/match_gateway /
 
 EXPOSE 8000
 CMD ["/match_gateway"]
