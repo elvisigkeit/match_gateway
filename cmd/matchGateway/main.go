@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/elvismdnin/matchGateway/web"
+	"github.com/elvismdnin/match_gateway/web"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

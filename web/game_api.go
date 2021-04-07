@@ -2,7 +2,7 @@ package web
 
 import (
 	"fmt"
-	"github.com/elvismdnin/matchGateway/internal/web"
+	"github.com/elvismdnin/match_gateway/internal/web"
 	"net/http"
 
 	"github.com/gorilla/mux"

@@ -1,4 +1,4 @@
-module github.com/elvismdnin/matchGateway
+module github.com/elvismdnin/match_gateway
 
 go 1.15
 
