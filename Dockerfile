@@ -12,9 +12,10 @@ COPY . .
 RUN go get -d -v ./...
 RUN go build -o /go/bin ./...
 
-FROM scratch
+FROM alpine
 
 COPY --from=builder /go/bin/match_gateway /
+COPY --from=builder /build/static /static
 
 EXPOSE 8000
-CMD ["/match_gateway"]
+ENTRYPOINT ["/match_gateway"]
