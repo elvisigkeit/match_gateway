@@ -23,7 +23,7 @@ It should be able to do this things:
 
 ### Front-end
 
-The game per se, that players interact. Its responsibilites are:
+The [game](https://github.com/elvismdnin/cchess) per se, that players interact. Its responsibilites are:
 
 - [x] Show home that makes request to gateway
 - [ ] Users login
@@ -32,7 +32,7 @@ The game per se, that players interact. Its responsibilites are:
 
 ### Manager
 
-The game manager, that deals with two players redirected by the gateway, it should:
+The [game manager](https://github.com/elvismdnin/match_manager), that deals with two players redirected by the gateway, it should:
 
 - [x] Verify each play
 - [ ] Assess the end of game
