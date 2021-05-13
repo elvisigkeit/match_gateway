@@ -35,6 +35,8 @@ spec:
               path: /
               port: 8000
               scheme: ''
+      imagePullSecrets:
+      - name: regcred
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
