@@ -15,8 +15,9 @@ rules:
       - pods
     apiGroups: ["*"]
     verbs:
-      - create
+      - get
       - list
+      - update
 
 ---
 
