@@ -7,8 +7,6 @@ import (
 	"log"
 	"net/http"
 
-	appsv1 "k8s.io/api/apps/v1"
-	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -33,56 +31,38 @@ func CreateGame() web.Handler {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 
-			log.Println("Creating deployment...")
-			deploymentsClient := clientset.AppsV1().Deployments("cchess")
-			result, err := deploymentsClient.Create(context.TODO(), createDeployment(), metav1.CreateOptions{})
+			cchessSSets := clientset.AppsV1().StatefulSets("cchess")
+
+			log.Println("\nTrying to update gateway statefulSet")
+			log.Println(cchessSSets)
+
+			gatewaySSet, err := cchessSSets.Get(context.TODO(), "gateway", metav1.GetOptions{})
 			if err != nil {
+				log.Println("Error getting gatewaySSet")
 				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
 			}
 
-			fmt.Printf("Created deployment %q.\n", result.GetObjectMeta().GetName())
-			deployReturn := fmt.Sprintf("Created deployment %s.\n", result.GetObjectMeta().GetName())
+			log.Println("After got gatewaySSet:")
+			log.Println(gatewaySSet)
+			log.Println(gatewaySSet.Name)
+			log.Println(gatewaySSet.Size())
 
-			_, _ = fmt.Fprint(w, deployReturn)
-		},
-	}
-}
+			replicas := *gatewaySSet.Spec.Replicas
+			gatewaySSet.Spec.Replicas = int32Ptr(replicas + 1)
 
-func createDeployment() *appsv1.Deployment {
+			_, err = cchessSSets.Update(context.TODO(), gatewaySSet, metav1.UpdateOptions{})
+			if err != nil {
+				log.Println("Error updating gatewaySSet")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 
-	return &appsv1.Deployment{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: "manager",
-		},
-		Spec: appsv1.DeploymentSpec{
-			Replicas: int32Ptr(2),
-			Selector: &metav1.LabelSelector{
-				MatchLabels: map[string]string{
-					"app": "manager",
-				},
-			},
-			Template: apiv1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{
-						"app": "manager",
-					},
-				},
-				Spec: apiv1.PodSpec{
-					Containers: []apiv1.Container{
-						{
-							Name:  "manager",
-							Image: "docker.pkg.github.com/elvismdnin/match_gateway/match_manager:0.1",
-							Ports: []apiv1.ContainerPort{
-								{
-									Name:          "http",
-									Protocol:      apiv1.ProtocolTCP,
-									ContainerPort: 8000,
-								},
-							},
-						},
-					},
-				},
-			},
+			log.Println("Finished update")
+			fmt.Printf("Updated statefulSet %q.\nIt was %d replicas, but now there are %d.", gatewaySSet.Name, replicas, replicas+1)
+			updateRet := fmt.Sprintf("Updated statefulSet %q.\nIt was %d replicas, but now there are %d.", gatewaySSet.Name, replicas, replicas+1)
+
+			_, _ = fmt.Fprint(w, updateRet)
 		},
 	}
 }
