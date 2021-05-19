@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: gateway
   labels:
@@ -10,14 +10,13 @@ spec:
     matchLabels:
       app: gateway
   replicas: 1
-  strategy:
-    type: RollingUpdate
+  serviceName: "gateway"
   template:
     metadata:
       labels:
         app: gateway
     spec:
-      dnsPolicy: ClusterFirst
+      dnsPolicy: Default
       serviceAccountName: gateway-sa
       containers:
         - name: match-gateway

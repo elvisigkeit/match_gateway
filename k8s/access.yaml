@@ -9,11 +9,12 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
+  namespace: cchess
   name: gateway-role
 rules:
   - resources:
-      - pods
-    apiGroups: ["*"]
+      - statefulsets
+    apiGroups: ["apps"]
     verbs:
       - get
       - list
