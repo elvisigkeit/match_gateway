@@ -27,7 +27,7 @@ spec:
       serviceAccountName: gateway-sa
       containers:
         - name: match-gateway
-          image: 'docker.pkg.github.com/elvismdnin/match_gateway/match_gateway:0.2'
+          image: 'docker.pkg.github.com/elvisigkeit/match_gateway/match_gateway:0.2'
           ports:
             - containerPort: 8000
           readinessProbe:
