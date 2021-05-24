@@ -60,7 +60,7 @@ func CreateGame() web.Handler {
 
 			log.Println("Finished update")
 			fmt.Printf("Updated statefulSet %q.\nIt was %d replicas, but now there are %d.", managerSSet.Name, replicas, replicas+1)
-			updateRet := fmt.Sprintf("{replicaNum: %s}", replicas + 1)
+			updateRet := fmt.Sprintf("{replicaNum: %d}", replicas + 1)
 
 			_, _ = fmt.Fprint(w, updateRet)
 		},
