@@ -33,34 +33,34 @@ func CreateGame() web.Handler {
 
 			cchessSSets := clientset.AppsV1().StatefulSets("cchess")
 
-			log.Println("\nTrying to update gateway statefulSet")
+			log.Println("\nUpdating manager statefulSet")
 			log.Println(cchessSSets)
 
-			gatewaySSet, err := cchessSSets.Get(context.TODO(), "gateway", metav1.GetOptions{})
+			managerSSet, err := cchessSSets.Get(context.TODO(), "manager", metav1.GetOptions{})
 			if err != nil {
-				log.Println("Error getting gatewaySSet")
+				log.Println("Error getting managerSSet")
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 
-			log.Println("After got gatewaySSet:")
-			log.Println(gatewaySSet)
-			log.Println(gatewaySSet.Name)
-			log.Println(gatewaySSet.Size())
+			log.Println("After got managerSSet:")
+			log.Println(managerSSet)
+			log.Println(managerSSet.Name)
+			log.Println(managerSSet.Size())
 
-			replicas := *gatewaySSet.Spec.Replicas
-			gatewaySSet.Spec.Replicas = int32Ptr(replicas + 1)
+			replicas := *managerSSet.Spec.Replicas
+			managerSSet.Spec.Replicas = int32Ptr(replicas + 1)
 
-			_, err = cchessSSets.Update(context.TODO(), gatewaySSet, metav1.UpdateOptions{})
+			_, err = cchessSSets.Update(context.TODO(), managerSSet, metav1.UpdateOptions{})
 			if err != nil {
-				log.Println("Error updating gatewaySSet")
+				log.Println("Error updating managerSSet")
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 
 			log.Println("Finished update")
-			fmt.Printf("Updated statefulSet %q.\nIt was %d replicas, but now there are %d.", gatewaySSet.Name, replicas, replicas+1)
-			updateRet := fmt.Sprintf("Updated statefulSet %q.\nIt was %d replicas, but now there are %d.", gatewaySSet.Name, replicas, replicas+1)
+			fmt.Printf("Updated statefulSet %q.\nIt was %d replicas, but now there are %d.", managerSSet.Name, replicas, replicas+1)
+			updateRet := fmt.Sprintf("{replicaNum: %s}", replicas + 1)
 
 			_, _ = fmt.Fprint(w, updateRet)
 		},
