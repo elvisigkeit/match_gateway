@@ -10,7 +10,6 @@ spec:
     matchLabels:
       app: gateway
   replicas: 1
-  serviceName: "gateway"
   template:
     metadata:
       labels:
