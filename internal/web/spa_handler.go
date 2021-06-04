@@ -12,6 +12,8 @@ type SpaHandler struct {
 }
 
 func (h SpaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	CreateCookie(w, r)
+
 	path, err := filepath.Abs(r.URL.Path)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

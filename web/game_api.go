@@ -20,6 +20,8 @@ func CreateGame() web.Handler {
 			r.Path("/new").Methods("GET")
 		},
 		Func: func(w http.ResponseWriter, r *http.Request) {
+			web.GetCookie(r)
+
 			config, err := rest.InClusterConfig()
 
 			if err != nil {
